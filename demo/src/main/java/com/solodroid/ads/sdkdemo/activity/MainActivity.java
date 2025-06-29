@@ -95,10 +95,10 @@ public class MainActivity extends AppCompatActivity {
 
         initAds();
         loadGdpr();
-        loadOpenAds();
+        //loadOpenAds();
         loadBannerAd();
-        loadInterstitialAd();
-        loadRewardedAd();
+        //loadInterstitialAd();
+        //loadRewardedAd();
 
         nativeAdViewContainer = findViewById(R.id.native_ad);
         setNativeAdStyle(nativeAdViewContainer);
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 .setAppLovinSdkKey(getResources().getString(R.string.applovin_sdk_key))
                 .setIronSourceAppKey(Constant.IRONSOURCE_APP_KEY)
                 .setWortiseAppId(Constant.WORTISE_APP_ID)
-                .setDebug(BuildConfig.DEBUG)
+                .setDebug(false)
                 .build();
     }
 
@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
                 .setAdStatus(Constant.AD_STATUS)
                 .setAdNetwork(Constant.AD_NETWORK)
                 .setBackupAdNetwork(Constant.BACKUP_AD_NETWORK)
-                .setAdMobBannerId(Constant.ADMOB_BANNER_ID)
+                .setAdMobBannerId(Constant.ADMOB_COLLAPSIBLE_BANNER_ID)
                 .setGoogleAdManagerBannerId(Constant.GOOGLE_AD_MANAGER_BANNER_ID)
                 .setFanBannerId(Constant.FAN_BANNER_ID)
                 .setUnityBannerId(Constant.UNITY_BANNER_ID)
@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
                 .setIronSourceBannerId(Constant.IRONSOURCE_BANNER_ID)
                 .setWortiseBannerId(Constant.WORTISE_BANNER_ID)
                 .setDarkTheme(sharedPref.getIsDarkTheme())
-                .build();
+                .build(false);
     }
 
     private void loadMediumRectangleAd() {
@@ -325,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
         destroyBannerAd();
-        destroyAppOpenAd();
+        //destroyAppOpenAd();
         Constant.isAppOpen = false;
     }
 

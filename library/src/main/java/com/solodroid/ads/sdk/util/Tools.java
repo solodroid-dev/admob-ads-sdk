@@ -5,8 +5,10 @@ import static com.solodroid.ads.sdk.util.Constant.VALUE;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.os.Bundle;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 
 import com.google.ads.mediation.admob.AdMobAdapter;
@@ -46,6 +48,17 @@ public class Tools {
             return new AdRequest.Builder()
                     //.addNetworkExtrasBundle(FacebookAdapter.class, extras)
                     .build();
+        }
+    }
+
+    public static AdRequest getAdRequest(Activity activity, Boolean legacyGDPR, boolean isCollapsibleBannerAd) {
+        if (isCollapsibleBannerAd) {
+            Bundle extras = new Bundle();
+            extras.putString("collapsible", "bottom");
+            return new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras).build();
+        } else {
+            Log.d("Rawr", "request ad");
+            return new AdRequest.Builder().build();
         }
     }
 

@@ -227,10 +227,12 @@ public class NativeAd {
                                         admobNativeAd.setNativeAd(NativeAd);
                                         admobNativeAd.setVisibility(View.VISIBLE);
                                         nativeAdViewContainer.setVisibility(View.VISIBLE);
+                                        Log.d("Rawr", adNetwork + " Native Ad Loaded");
                                     })
                                     .withAdListener(new AdListener() {
                                         @Override
                                         public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                                            Log.d("Rawr", adNetwork + " Native Ad onAdFailedToLoad: " + adError);
                                             loadBackupNativeAd();
                                         }
                                     })

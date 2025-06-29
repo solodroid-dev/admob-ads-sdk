@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -54,6 +55,11 @@ public class BannerAd {
 
         public Builder build() {
             loadBannerAd();
+            return this;
+        }
+
+        public Builder build(boolean isCollapsibleBannerAd) {
+            loadCollapsibleBannerAd(isCollapsibleBannerAd);
             return this;
         }
 
@@ -313,6 +319,114 @@ public class BannerAd {
                                 public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                                     super.onAdFailedToLoad(loadAdError);
                                     googleAdContainerView.setVisibility(View.GONE);
+                                }
+
+                                @Override
+                                public void onAdImpression() {
+                                    super.onAdImpression();
+                                }
+
+                                @Override
+                                public void onAdLoaded() {
+                                    super.onAdLoaded();
+                                    googleAdContainerView.setVisibility(View.VISIBLE);
+                                }
+
+                                @Override
+                                public void onAdOpened() {
+                                    super.onAdOpened();
+                                }
+                            });
+                        });
+                        break;
+
+                    default:
+                        break;
+                }
+                Log.d(TAG, "Banner Ad is enabled");
+            } else {
+                Log.d(TAG, "Banner Ad is disabled");
+            }
+        }
+
+        public void loadCollapsibleBannerAd(boolean isCollapsibleBannerAd) {
+            if (adStatus.equals(AD_STATUS_ON) && placementStatus != 0) {
+                switch (adNetwork) {
+                    case ADMOB:
+                    case FAN_BIDDING_ADMOB:
+                        FrameLayout adContainerView = activity.findViewById(R.id.admob_banner_view_container);
+                        adContainerView.post(() -> {
+                            adView = new AdView(activity);
+                            adView.setAdUnitId(adMobBannerId);
+                            adContainerView.removeAllViews();
+                            adContainerView.addView(adView);
+                            adView.setAdSize(Tools.getAdSize(activity));
+                            adView.loadAd(Tools.getAdRequest(activity, legacyGDPR, isCollapsibleBannerAd));
+                            adView.setAdListener(new AdListener() {
+                                @Override
+                                public void onAdLoaded() {
+                                    // Code to be executed when an ad finishes loading.
+                                    adContainerView.setVisibility(View.VISIBLE);
+                                    Log.d("Rawr", adNetwork + " Banner Ad loaded");
+                                    //Toast.makeText(activity, "loaded", Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                                    // Code to be executed when an ad request fails.
+                                    adContainerView.setVisibility(View.GONE);
+                                    Log.d("Rawr", adNetwork + " Banner Ad onAdFailedToLoad: " + adError);
+                                    //loadBackupBannerAd();
+                                }
+
+                                @Override
+                                public void onAdOpened() {
+                                    // Code to be executed when an ad opens an overlay that
+                                    // covers the screen.
+                                }
+
+                                @Override
+                                public void onAdClicked() {
+                                    // Code to be executed when the user clicks on an ad.
+                                    Log.d("Rawr", adNetwork + " Banner Ad clicked : " + adMobBannerId);
+                                }
+
+                                @Override
+                                public void onAdClosed() {
+                                    // Code to be executed when the user is about to return
+                                    // to the app after tapping on an ad.
+                                }
+                            });
+                        });
+                        Log.d(TAG, adNetwork + " Banner Ad unit Id : " + adMobBannerId);
+                        break;
+
+                    case GOOGLE_AD_MANAGER:
+                    case FAN_BIDDING_AD_MANAGER:
+                        FrameLayout googleAdContainerView = activity.findViewById(R.id.google_ad_banner_view_container);
+                        googleAdContainerView.post(() -> {
+                            adManagerAdView = new AdManagerAdView(activity);
+                            adManagerAdView.setAdUnitId(googleAdManagerBannerId);
+                            googleAdContainerView.removeAllViews();
+                            googleAdContainerView.addView(adManagerAdView);
+                            adManagerAdView.setAdSize(Tools.getAdSize(activity));
+                            adManagerAdView.loadAd(Tools.getGoogleAdManagerRequest());
+                            adManagerAdView.setAdListener(new AdListener() {
+                                @Override
+                                public void onAdClicked() {
+                                    super.onAdClicked();
+                                }
+
+                                @Override
+                                public void onAdClosed() {
+                                    super.onAdClosed();
+                                }
+
+                                @Override
+                                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                                    super.onAdFailedToLoad(loadAdError);
+                                    googleAdContainerView.setVisibility(View.GONE);
+                                    //loadBackupBannerAd();
                                 }
 
                                 @Override
